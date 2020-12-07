@@ -47,4 +47,4 @@ def vote(request, question_id):
 
 # coursera assignment
 def owner(request):
-    return HttpResponse("Hello, world. 8c0f24a3 is the polls index.")
+    return HttpResponse("Hello, world. e99ce0cd is the polls index.")
