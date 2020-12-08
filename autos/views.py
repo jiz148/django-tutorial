@@ -48,7 +48,7 @@ class MakeUpdate(LoginRequiredMixin, View):
     def get(self, request, pk):
         make = get_object_or_404(self.model, pk=pk)
         form = MakeForm(instance=make)
-        ctx = {'form', form}
+        ctx = {'form': form}
         return render(request, self.template, ctx)
 
     def post(self, request, pk):
@@ -65,7 +65,7 @@ class MakeUpdate(LoginRequiredMixin, View):
 class MakeDelete(LoginRequiredMixin, View):
     model = Make
     success_url = reverse_lazy('auto:all')
-    template = 'autos/make_confirm_delete'
+    template = 'autos/make_confirm_delete.html'
 
     def get(self, request, pk):
         make = get_object_or_404(self.model, pk=pk)
