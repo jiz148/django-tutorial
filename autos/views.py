@@ -8,7 +8,7 @@ from .forms import MakeForm
 
 
 # Create your views here.
-class MainView(View, LoginRequiredMixin):
+class MainView(LoginRequiredMixin, View):
     def get(self, request):
         mc = Make.objects.all().count()
         al = Auto.objects.all()
@@ -17,11 +17,11 @@ class MainView(View, LoginRequiredMixin):
         return render(request, 'autos/auto_list.html', ctx)
 
 
-class MakeView(ListView, LoginRequiredMixin):
+class MakeView(LoginRequiredMixin, ListView):
     model = Make
 
 
-class MakeCreate(View, LoginRequiredMixin):
+class MakeCreate(LoginRequiredMixin, View):
     template = 'autos/make_form.html'
     success_url = reverse_lazy('autos:all')
 
@@ -40,7 +40,7 @@ class MakeCreate(View, LoginRequiredMixin):
         return redirect(self.success_url)
 
 
-class MakeUpdate(View, LoginRequiredMixin):
+class MakeUpdate(LoginRequiredMixin, View):
     model = Make
     success_url = reverse_lazy('autos:all')
     template = 'autos/make_form.html'
@@ -62,7 +62,7 @@ class MakeUpdate(View, LoginRequiredMixin):
         return redirect(self.success_url)
 
 
-class MakeDelete(View, LoginRequiredMixin):
+class MakeDelete(LoginRequiredMixin, View):
     model = Make
     success_url = reverse_lazy('auto:all')
     template = 'autos/make_confirm_delete'
@@ -80,19 +80,19 @@ class MakeDelete(View, LoginRequiredMixin):
 
 
 # Here comes the easy way to do it
-class AutoCreate(CreateView, LoginRequiredMixin):
+class AutoCreate(LoginRequiredMixin, CreateView):
     model = Auto
     fields = '__all__'
     success_url = reverse_lazy('autos:all')
 
 
-class AutoUpdate(UpdateView, LoginRequiredMixin):
+class AutoUpdate(LoginRequiredMixin, UpdateView):
     model = Auto
     fields = '__all__'
     success_url = reverse_lazy('autos:all')
 
 
-class AutoDelete(DeleteView, LoginRequiredMixin):
+class AutoDelete(LoginRequiredMixin, DeleteView):
     model = Auto
     fields = '__all__'
     success_url = reverse_lazy('autos:all')
