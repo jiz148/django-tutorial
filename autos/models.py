@@ -20,7 +20,7 @@ class Auto(models.Model):
         validators=[MinLengthValidator(2, 'Nickcname must be greater than 1 character')]
     )
     mileage = models.PositiveIntegerField()
-    comment = models.CharField(max_length=300)
+    comments = models.CharField(max_length=300)
     make = models.ForeignKey('Make', on_delete=models.CASCADE, null=False)
 
     def __str__(self):
