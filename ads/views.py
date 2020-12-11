@@ -31,6 +31,6 @@ class AdUpdateView(OwnerUpdateView):
     success_url = reverse_lazy('ads:all')
 
 
-class AdDeleteView(OwnerDetailView):
+class AdDeleteView(OwnerDeleteView):
     model = Ad
     success_url = reverse_lazy('ads:all')
