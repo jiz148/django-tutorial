@@ -49,8 +49,6 @@ INSTALLED_APPS = [
     # built apps
     'home.apps.HomeConfig',
     'ads.apps.AdsConfig',
-    'autos.apps.AutosConfig',
-    'autos.cats.CatsConfig',
 ]
 
 # When we get to crispy forms :)
