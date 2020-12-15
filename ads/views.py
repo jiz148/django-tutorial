@@ -1,15 +1,15 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 
-from .models import Ad
+from .models import Ad, Comment
 from .owner import \
     OwnerListView, \
     OwnerDetailView, \
     OwnerDeleteView
-from .forms import CreateForm
+from .forms import CreateForm, CommentForm
 
 
 # Create your views here.
@@ -20,6 +20,14 @@ class AdListView(OwnerListView):
 class AdDetailView(OwnerDetailView):
     model = Ad
     fields = ['title', 'price', 'text']
+    template_name = 'ads/ad_detail.html'
+
+    def get(self, request, pk):
+        ad = Ad.objects.get(id=pk)
+        comments = Comment.objects.filter(ad=ad).order_by('-updated_at')
+        comment_form = CommentForm()
+        ctx = {'ad': ad, 'comments': comments, 'comment_form': comment_form }
+        return render(request, self.template_name, ctx)
 
 
 class AdCreateView(LoginRequiredMixin, View):
@@ -81,3 +89,22 @@ def stream_file(request, pk):
     response['Content-Length'] = len(ad.picture)
     response.write(ad.picture)
     return response
+
+
+class CommentCreateView(LoginRequiredMixin, View):
+
+    def post(self, request, pk):
+        ad = get_object_or_404(Ad, id=pk)
+        comment = Comment(text=request.POST['comment'], owner=request.user, ad=ad)
+        comment.save()
+        return redirect(reverse('ads:ad_detail', args=[pk]))
+
+
+class CommentDeleteView(OwnerDeleteView):
+    model = Comment
+    template_name = "ads/comment_confirm_delete.html"
+
+    # https://stackoverflow.com/questions/26290415/deleteview-with-a-dynamic-success-url-dependent-on-id
+    def get_success_url(self):
+        ad = self.object.ad
+        return reverse('ads:ad_detail', args=[ad.id])
