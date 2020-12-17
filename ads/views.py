@@ -25,6 +25,7 @@ class AdListView(OwnerListView):
 
     def get(self, request):
         ad_list = Ad.objects.all()
+        favorites = list()
         if request.user.is_authenticated:
             # rows = [{'id': 2}, {'id': 4} ... ]  (A list of ad ids)
             rows = request.user.favorite_ads.values('id')
