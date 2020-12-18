@@ -1,5 +1,5 @@
 /**
- * @fileOverview jquery-autocomplete, the jQuery Autocompleter
+ * @fileOverview js-autocomplete, the jQuery Autocompleter
  * @author <a href="mailto:dylan@dyve.net">Dylan Verheul</a>
  * @version 2.4.4
  * @requires jQuery 1.6+
@@ -209,7 +209,7 @@
          * Assert parameters
          */
         if (!$elem || !($elem instanceof $) || $elem.length !== 1 || $elem.get(0).tagName.toUpperCase() !== 'INPUT') {
-            throw new Error('Invalid parameter for jquery.Autocompleter, jQuery object with one element with INPUT tag expected.');
+            throw new Error('Invalid parameter for js.Autocompleter, jQuery object with one element with INPUT tag expected.');
         }
 
         /**
@@ -241,7 +241,7 @@
          * @property {string} Class name to mark selected item
          * @private
          */
-        this.selectClass_ = 'jquery-autocomplete-selected-item';
+        this.selectClass_ = 'js-autocomplete-selected-item';
 
         /**
          * @property {number} Handler to activation timeout

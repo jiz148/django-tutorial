@@ -3,6 +3,8 @@ from django.views import View
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
+from django.db.models import Q
+from django.contrib.humanize.templatetags.humanize import naturaltime
 
 # csrf exemption in class based views
 # https://stackoverflow.com/questions/16458166/how-to-disable-djangos-csrf-validation
@@ -24,14 +26,35 @@ class AdListView(OwnerListView):
     template_name = 'ads/ad_list.html'
 
     def get(self, request):
-        ad_list = Ad.objects.all()
+        ad_list = Ad.objects.select_related().all()
+
+        # search
+        search_str = request.GET.get('search', False)
+        if search_str:
+            # simple title-only search
+            # objects = Post.objects.filter(title__contains=strval).select_related().order_by('-updated_at')[:10]
+
+            # Multi-field search
+            query = Q(title__contains=search_str)
+            query.add(Q(text__contains=search_str), Q.OR)
+            ad_list = ad_list.filter(query)
+
+        # favorites
         favorites = list()
         if request.user.is_authenticated:
             # rows = [{'id': 2}, {'id': 4} ... ]  (A list of ad ids)
             rows = request.user.favorite_ads.values('id')
             # favorites = [2, 4, ...] using list comprehension
             favorites = [row['id'] for row in rows]
-        ctx = {'ad_list': ad_list, 'favorites': favorites}
+
+        # displays by updated time and filter to last 10
+        ad_list = ad_list.order_by('-updated_at')[:10]
+
+        # Augment the displayed time
+        for ad in ad_list:
+            ad.natural_updated = naturaltime(ad.updated_at)
+
+        ctx = {'ad_list': ad_list, 'favorites': favorites, 'search': search_str}
         return render(request, self.template_name, ctx)
 
 
