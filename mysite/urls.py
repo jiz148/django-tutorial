@@ -20,6 +20,7 @@ from django.conf import settings
 from django.conf.urls import url
 from django.contrib.auth import views as auth_views
 from django.views.static import serve
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('', include('home.urls')),  # Change to ads.urls
@@ -31,13 +32,8 @@ urlpatterns = [
 
 # Serve the static HTML
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-urlpatterns += [
-    url(r'^site/(?P<path>.*)$', serve,
-        {'document_root': os.path.join(BASE_DIR, 'site'),
-         'show_indexes': True},
-        name='site_path'
-        ),
-]
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
 
 # Serve the favicon - Keep for later
 urlpatterns += [
