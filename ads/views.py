@@ -85,7 +85,7 @@ class AdCreateView(LoginRequiredMixin, View):
 
         if not form.is_valid():
             ctx = {'form': form}
-            render(request, self.template_name, ctx)
+            return render(request, self.template_name, ctx)
 
         # add owner to the model before saving
         ad = form.save(commit=False)
